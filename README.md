@@ -20,10 +20,18 @@
 
 Напишите запрос к учебной базе данных, который вернёт процентное отношение общего размера всех индексов к общему размеру всех таблиц.
 
+```sql
+select sum(data_length) as SUM_Data_Length, sum(index_length) as SUM_Index_Length, sum(index_length)*100.0/sum(data_length) as Persentage_ratio
+from information_schema.tables
+where table_schema='sakila' and data_length is not null;
+```
+![Скриншот выполнения запроса](https://github.com/StanislavBaranovskii/12-5-hw/blob/main/img/12-5-1.png "Скриншот выполнения запроса")
+
 ---
 ## Задание 2
 
 Выполните explain analyze следующего запроса:
+
 ```sql
 select distinct concat(c.last_name, ' ', c.first_name), sum(p.amount) over (partition by c.customer_id, f.title)
 from payment p, rental r, customer c, inventory i, film f
@@ -47,6 +55,8 @@ PostgreSQL поддерживает следующие типы индексов
 - GIN (Inverted) - в MySQL так же используется;
 - BRIN
 - bloom
+
+
 Для разных типов индексов применяются разные алгоритмы, ориентированные на определённые типы запросов.
 По умолчанию команда CREATE INDEX создаёт индексы типа B-Tree, эффективные в большинстве случаев.
 
