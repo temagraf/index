@@ -40,19 +40,37 @@ where date(p.payment_date) = '2005-07-30' and p.payment_date = r.rental_date and
 - перечислите узкие места;
 - оптимизируйте запрос: внесите корректировки по использованию операторов, при необходимости добавьте индексы.
 
+### Узкие места и их устранение
 
-В простом случае, индекс необходимо создавать для тех столбцов, которые присутствуют в условии отбора where или по которым выполняется сотрировка order
+1. Запрос слишком сложный и в нём используются избыточные таблицы
+Из запроса убираем фрагмент `over (partition by c.customer_id, f.title)` и оператор `distinct`.
+Так же убираем избыточные таблицы `film` и `inventory` :
+```sql
+select concat(c.last_name, ' ', c.first_name), sum(p.amount)
+from payment p, rental r, customer c
+where date(p.payment_date) = '2005-07-30' and p.payment_date = r.rental_date and r.customer_id = c.customer_id
+group by c.last_name, c.first_name;
+```
+Время выполнения запроса сокращается более чем в 60 раз.
 
+2. Можно выполнить объединение таблиц в запросе, использую оператор `join` :
+```sql
+select concat(c.last_name, ' ', c.first_name), sum(p.amount)
+from customer c
+join rental r on r.customer_id = c.customer_id
+join payment p on p.payment_date = r.rental_date and date(p.payment_date) = '2005-07-30'
+group by c.last_name, c.first_name;
+```
 
-При анализе запроса с использованием оператора explain видим, что в запросе к талицам film и payment не используется ни один индекс (стобец key), так же отсутсвуют какие либо индексы, которые могут быть использованы для этого запроса (стобец possibly_keys). Столбец rows показывае число записей, которые пришлось прочитать базе данных для выполнения данного запроса.
-![Скриншот выполнения запроса с explain](https://github.com/StanislavBaranovskii/12-5-hw/blob/main/img/12-5-2-1.png "Скриншот выполнения запроса с explain")
+3. Для таблицы `payment` на столбец `payment_date` можно создать индекс : 
+Смотрим существующие для таблицы индексы и создаём новый индекс
+```sql
+select *
+from INFORMATION_SCHEMA.STATISTICS
+where TABLE_NAME='payment';
 
-SELECT *
-FROM INFORMATION_SCHEMA.STATISTICS
-WHERE TABLE_NAME='payment';
-
-CREATE INDEX idx_payment_date ON payment(payment_date);
-
+create index idx_payment_date on payment(payment_date);
+```
 ---
 ## Задание 3*
 
