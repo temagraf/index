@@ -70,7 +70,22 @@ from INFORMATION_SCHEMA.STATISTICS
 where TABLE_NAME='payment';
 
 create index idx_payment_date on payment(payment_date);
+
+select concat(c.last_name, ' ', c.first_name), sum(p.amount)
+from payment p, rental r, customer c
+where p.payment_date >= '2005-07-30 00:00:00' and p.payment_date < date_add('2005-07-30 00:00:00', interval 1 day) and p.payment_date = r.rental_date and r.customer_id = c.customer_id
+group by c.last_name, c.first_name;
+
+drop index idx_payment_date on payment;
 ```
+### Скриншот анализа запроса без индекса
+
+![Скриншот анализа запроса без индекса](https://github.com/StanislavBaranovskii/12-5-hw/blob/main/img/12-5-2-1.png "Скриншот анализа запроса без индекса")
+
+### Скриншот анализа запроса с индексом
+
+![Скриншот анализа запроса с индексом](https://github.com/StanislavBaranovskii/12-5-hw/blob/main/img/12-5-2-2.png "Скриншот анализа запроса с индесом")
+
 ---
 ## Задание 3*
 
