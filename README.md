@@ -1,4 +1,4 @@
-# Домашнее задание к занятию «`Индексы`» - `Барановский Станислав`
+# Домашнее задание к занятию «`Индексы`» - `Яковлев Артем`
 
 ### Инструкция по выполнению домашнего задания
 
@@ -25,7 +25,7 @@ select sum(data_length) as SUM_Data_Length, sum(index_length) as SUM_Index_Lengt
 from information_schema.tables
 where table_schema='sakila' and data_length is not null;
 ```
-![Скриншот выполнения запроса](https://github.com/StanislavBaranovskii/12-5-hw/blob/main/img/12-5-1.png "Скриншот выполнения запроса")
+![Скриншот выполнения запроса](https://github.com/temagraf/index/blob/main/img/12-5-1.png "Скриншот выполнения запроса")
 
 ---
 ## Задание 2
@@ -80,11 +80,11 @@ drop index idx_payment_date on payment;
 ```
 ### Скриншот анализа запроса без индекса
 
-![Скриншот анализа запроса без индекса](https://github.com/StanislavBaranovskii/12-5-hw/blob/main/img/12-5-2-1.png "Скриншот анализа запроса без индекса")
+![Скриншот анализа запроса без индекса](https://github.com/temagraf/index/blob/main/img/12-5-2-1.png "Скриншот анализа запроса без индекса")
 
 ### Скриншот анализа запроса с индексом
 
-![Скриншот анализа запроса с индексом](https://github.com/StanislavBaranovskii/12-5-hw/blob/main/img/12-5-2-2.png "Скриншот анализа запроса с индесом")
+![Скриншот анализа запроса с индексом](https://github.com/temagraf/index/blob/main/img/12-5-2-2.png "Скриншот анализа запроса с индесом")
 
 ---
 ## Задание 3*
